@@ -11,7 +11,7 @@ on:
  
 jobs:
   test:
-    runs-on: windows-latest  # Of windows-latest/macOS-latest als specifiek platform nodig is
+    runs-on: windows-latest
     steps:
       - name: Haal de repository op
         uses: actions/checkout@v4
@@ -19,16 +19,16 @@ jobs:
       - name: Installeer .NET SDK
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '8.0.x'  # Gebruik de juiste versie voor MAUI
+          dotnet-version: '8.0.x'
  
       - name: Installeer MAUI workloads
         run: dotnet workload install maui --ignore-failed-sources
  
       - name: Herstel afhankelijkheden
-        run: dotnet restore --runtime win-x64
+        run: dotnet restore Grocery.App/Grocery.App.csproj
  
-      - name: Bouw de applicatie
-        run: dotnet build -f net8.0-android --configuration Release --no-restore
-
-      - name: Voer unit tests uit
-        run: dotnet test -f net8.0-android --configuration Release --no-restore --no-build --verbosity normal
+      - name: Bouw de applicatie (Android)
+        run: dotnet build Grocery.App/Grocery.App.csproj -f net8.0-android --configuration Release
+ 
+      - name: Bouw en voer tests uit
+        run: dotnet test --configuration Release --no-build --verbosity normal
